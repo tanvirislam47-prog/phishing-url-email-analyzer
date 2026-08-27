@@ -2,7 +2,7 @@
 
 An educational Django application for examining suspicious characteristics in URLs and emails through explainable local heuristics.
 
-> **Phase 1 status:** The project foundation and interface are implemented. Real URL analysis, email analysis, risk scoring, scan persistence, history records, and dashboard statistics are planned for later phases and are not currently available.
+> **Phase 2 status:** The project foundation, interface, database models, migration, admin registrations, and persistence tests are implemented. Real URL analysis, email analysis, risk scoring, scan workflow, history results, and dashboard statistics remain planned for later phases.
 
 ## Overview
 
@@ -19,11 +19,11 @@ This is a simple Django monolith using:
 - HTML5 and CSS3
 - Minimal vanilla JavaScript
 
-The logical components are `core`, `scans`, `analysis`, and `dashboard`. Phase 1 includes the project configuration, reusable base template, responsive navigation, landing page, About page, URL and email input foundations, placeholder result page, empty history state, zero-state dashboard, documentation stubs, and repository hygiene files.
+The logical components are `core`, `scans`, `analysis`, and `dashboard`. Phase 2 includes the project configuration, reusable base template, responsive navigation, landing page, About page, URL and email input foundations, placeholder result page, empty history state, zero-state dashboard, Django ORM persistence models, migration, admin registrations, model tests, documentation, and repository hygiene files.
 
 ## Planned features
 
-Later phases will implement local URL structural analysis, email social-engineering analysis, explainable 0–100 risk scoring, detailed result pages, persisted scan history, and real dashboard summaries.
+Later phases will implement local URL structural analysis, email social-engineering analysis, explainable 0–100 risk scoring, real scan workflow, detailed result rendering from persisted records, real scan history, and dashboard summaries.
 
 ## Project structure
 
@@ -65,13 +65,13 @@ Then open `http://127.0.0.1:8000/` in a browser.
 
 ## Testing
 
-Phase 1 verification centers on Django system checks, route rendering, template references, static assets, CSRF-protected forms, responsive layout, and honest zero or planned states. Future phases will add unit and security regression tests for the analysis engines and risk engine.
+Phase 2 verification includes Django system checks, migrations, ORM model tests, relationship tests, database-constraint tests, admin-registration tests, route rendering, template references, static assets, CSRF-protected forms, responsive layout, and honest zero or planned states. Future phases will add unit and security regression tests for the analysis engines and risk engine.
 
 ## Security boundary
 
-The application must never open, crawl, resolve, or connect to a submitted URL. Phase 1 contains no URL analysis logic and no network client. User-provided content remains untrusted input and must continue to be escaped when rendered.
+The application must never open, crawl, resolve, or connect to a submitted URL. Phase 2 contains no URL analysis logic and no network client. User-provided content remains untrusted input and must continue to be escaped when rendered.
 
-The current email foundation accepts attachment names as text only. It does not accept, execute, unpack, preview, or scan binary files.
+The current email foundation accepts attachment names as text only. It does not accept, execute, unpack, preview, or scan binary files. Model fields are bounded to reduce unnecessary retention of sensitive submitted content.
 
 ## Limitations
 
