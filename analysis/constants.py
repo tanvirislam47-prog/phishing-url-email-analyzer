@@ -217,8 +217,112 @@ EMAIL_INDICATOR_POINTS = {
     "EMAIL_DOUBLE_EXTENSION": 10,
 }
 
-# Points are metadata for the future centralized risk engine. Phase 3 returns
-# them on indicators but does not aggregate them into a score or verdict.
+# Phase 5 risk-engine configuration. IndicatorResult.points remains useful
+# metadata, while this map provides the reviewed final-scoring weights.
+RISK_RULE_VERSION = "risk-v1"
+RISK_MINIMUM_SCORE = 0
+RISK_MAXIMUM_SCORE = 100
+RISK_LEVEL_THRESHOLDS = (
+    (0, 19, "VERY_LOW"),
+    (20, 39, "LOW"),
+    (40, 59, "MEDIUM"),
+    (60, 79, "HIGH"),
+    (80, 100, "CRITICAL"),
+)
+
+RISK_VERDICTS = {
+    "VERY_LOW": "Safe for the configured checks — no significant indicators detected",
+    "LOW": "Low risk — review the context",
+    "MEDIUM": "Potentially suspicious",
+    "HIGH": "High-risk characteristics detected",
+    "CRITICAL": "Highly suspicious / potentially phishing",
+}
+
+# The engine uses this centralized map first, then falls back to an indicator's
+# own positive points metadata for compatible future/custom indicators.
+RISK_WEIGHTS = {
+    "URL_IP_ADDRESS": 25,
+    "URL_HTTP": 10,
+    "URL_AT_SYMBOL": 15,
+    "URL_LONG": 10,
+    "URL_LONG_HOSTNAME": 5,
+    "URL_LONG_PATH": 5,
+    "URL_EXCESSIVE_SUBDOMAINS": 10,
+    "URL_EXCESSIVE_HYPHENS": 5,
+    "URL_SUSPICIOUS_TLD": 15,
+    "URL_SHORTENER": 10,
+    "URL_SUSPICIOUS_KEYWORD": 10,
+    "URL_UNUSUAL_PORT": 10,
+    "URL_PERCENT_ENCODING": 8,
+    "URL_EXCESSIVE_ENCODING": 15,
+    "URL_SUSPICIOUS_CHARACTERS": 10,
+    "URL_EXCESSIVE_PATH_DEPTH": 8,
+    "URL_PUNYCODE": 10,
+    "URL_AUTHENTICATION_SYNTAX": 10,
+    "URL_UNKNOWN_SCHEME": 8,
+    "URL_BRAND_LIKE_STRUCTURE": 10,
+    "EMAIL_REPLY_TO_MISMATCH": 15,
+    "EMAIL_REPLY_TO_MALFORMED": 8,
+    "EMAIL_SENDER_MISSING": 5,
+    "EMAIL_SENDER_MALFORMED": 10,
+    "EMAIL_SENDER_DOMAIN_SUSPICIOUS": 15,
+    "EMAIL_DISPLAY_NAME_DECEPTION": 15,
+    "EMAIL_SUBJECT_PATTERN": 5,
+    "EMAIL_MALFORMED_MIME": 2,
+    "EMAIL_URGENCY_LANGUAGE": 10,
+    "EMAIL_THREAT_LANGUAGE": 15,
+    "EMAIL_ACCOUNT_SUSPENSION": 15,
+    "EMAIL_CREDENTIAL_REQUEST": 25,
+    "EMAIL_PASSWORD_REQUEST": 25,
+    "EMAIL_OTP_REQUEST": 20,
+    "EMAIL_IDENTITY_VERIFICATION": 10,
+    "EMAIL_PAYMENT_REQUEST": 15,
+    "EMAIL_FINANCIAL_REQUEST": 20,
+    "EMAIL_CRYPTO_REQUEST": 20,
+    "EMAIL_PRIZE_REWARD": 10,
+    "EMAIL_SECURITY_IMPERSONATION": 5,
+    "EMAIL_CALL_TO_ACTION_PRESSURE": 5,
+    "EMAIL_CONTAINS_SUSPICIOUS_URL": 20,
+    "EMAIL_LINK_TEXT_MISMATCH": 20,
+    "EMAIL_RISKY_ATTACHMENT": 20,
+    "EMAIL_DOUBLE_EXTENSION": 20,
+}
+
+# When detailed URL indicators are present inside an email, the generic
+# contextual email marker is metadata only. Without detailed URL evidence it
+# can contribute at most this small contextual amount.
+CONTEXTUAL_INDICATOR_CAPS = {
+    "EMAIL_CONTAINS_SUSPICIOUS_URL": 5,
+}
+
+RECOMMENDATION_BY_CODE = {
+    "EMAIL_CREDENTIAL_REQUEST": "Do not enter or send credentials through the message.",
+    "EMAIL_PASSWORD_REQUEST": "Do not provide a password through the message.",
+    "EMAIL_OTP_REQUEST": "Never share an OTP, PIN, or security code with a message sender.",
+    "EMAIL_FINANCIAL_REQUEST": "Verify financial requests through an independently known channel.",
+    "EMAIL_PAYMENT_REQUEST": "Verify payment requests independently before sending money.",
+    "EMAIL_CRYPTO_REQUEST": "Treat wallet and cryptocurrency requests with extreme caution and verify independently.",
+    "EMAIL_RISKY_ATTACHMENT": "Do not open or execute risky attachments until the sender and file are independently verified.",
+    "EMAIL_DOUBLE_EXTENSION": "Do not open an attachment with a suspicious double extension.",
+    "EMAIL_REPLY_TO_MISMATCH": "Verify the intended recipient before replying to the message.",
+    "EMAIL_DISPLAY_NAME_DECEPTION": "Inspect the actual sender address and verify it independently.",
+    "EMAIL_CONTAINS_SUSPICIOUS_URL": "Avoid opening links in the message; use a trusted bookmark or independently known address.",
+    "EMAIL_LINK_TEXT_MISMATCH": "Do not click a link whose visible text differs from its destination.",
+}
+
+RECOMMENDATION_BY_CATEGORY = {
+    "sender": "Verify the sender through an independent channel.",
+    "reply_to": "Verify the intended recipient before replying.",
+    "link": "Avoid opening suspicious links and verify the destination independently.",
+    "attachment": "Be cautious with attachments and verify them before opening.",
+    "keyword": "Do not trust sensitive-action wording alone; verify the request independently.",
+    "transport": "Avoid entering sensitive information until the destination is independently verified.",
+    "hostname": "Review the actual domain and verify the organization independently.",
+    "domain": "Verify the domain through an independently known address.",
+    "domain_structure": "Do not rely on familiar words in a domain; verify the organization independently.",
+}
+
+# Points are the Phase 3 analyzer metadata retained for future/custom rules.
 INDICATOR_POINTS = {
     "URL_MALFORMED": 0,
     "URL_IP_ADDRESS": 18,

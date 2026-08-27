@@ -69,10 +69,28 @@ HTTP(S) URLs found in the body or HTML href attributes are passed to the existin
 
 The email analyzer returns `EmailAnalysisResult` with email features, indicators, extracted URL analysis, attachment metadata, bounded errors, and metadata confirming no network access. It does not write to Django models and does not calculate a final score, risk level, or verdict.
 
+## Centralized risk-engine pipeline
+
+Phase 5 adds the framework-independent risk engine in `analysis/risk_engine.py`. The full analysis pipeline is:
+
+```text
+URL Analyzer + Email Analyzer
+                ↓
+             Indicators
+                ↓
+           Risk Engine
+                ↓
+   Score / Risk Level / Verdict
+                ↓
+       Future persistence layer
+```
+
+The engine accepts `IndicatorResult` objects or compatible dictionaries, deduplicates by rule code, applies centralized weights, handles nested email URL context, clamps the score to 0–100, maps the score to the existing `Scan.RiskLevel` choices, and returns a transparent breakdown, summary, recommendations, and `risk-v1` metadata. It remains independent of Django and does not write database records.
+
 ## Planned architecture
 
-Later phases will add a deterministic centralized risk engine, scan orchestration, result persistence calls, real history, and dashboard statistics. The current URL and email analyzers are ready to be called by that workflow but remain separate from Django views and database writes.
+Later phases will add scan orchestration, result persistence calls, real history, and dashboard statistics. The current URL analyzer, email analyzer, and risk engine are ready to be called by that workflow but remain separate from Django views and database writes.
 
 ## Phase boundary
 
-Phase 4 implements the email analyzer in addition to the Phase 3 URL analyzer. It does not implement centralized score calculation, final risk levels or verdicts, real scan workflow, real history results, real dashboard statistics, external APIs, DNS, HTTP requests, machine learning, binary attachment uploads, or authentication.
+Phase 5 implements centralized risk scoring in addition to the Phase 3 URL analyzer and Phase 4 email analyzer. It does not implement complete scan orchestration, database persistence integration, real history results, real dashboard statistics, external APIs, DNS, HTTP requests, machine learning, binary attachment uploads, or authentication.

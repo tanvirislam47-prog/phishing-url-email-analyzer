@@ -177,3 +177,81 @@ Raw email input is limited to 50,000 characters, structured bodies to 30,000 cha
 ## No final scoring
 
 Email indicators include points metadata so a later centralized risk engine can combine them with URL indicators. Phase 4 does not aggregate points, calculate a final score, assign a risk level, or produce a verdict.
+
+
+# Risk Scoring
+
+## Phase 5 status
+
+Phase 5 adds a centralized, framework-independent risk engine in `analysis/risk_engine.py`. It consumes structured `IndicatorResult` objects or compatible dictionaries and returns an immutable `RiskAnalysisResult`. It does not depend on Django views, database objects, network clients, files, or external services.
+
+## Indicator weights
+
+Final-scoring weights are centralized in `analysis/constants.py` under `RISK_WEIGHTS`. Known URL and email rule codes use reviewed weights rather than the smaller Phase 3 and Phase 4 points metadata. Unknown compatible indicator codes fall back to their positive `points` value, which keeps the engine extensible without scattering magic numbers through implementation code.
+
+| Signal family | Representative weights |
+|---|---:|
+| URL IP address | 25 |
+| URL HTTP | 10 |
+| URL at-symbol | 15 |
+| URL suspicious TLD | 15 |
+| URL excessive encoding | 15 |
+| Email credential/password request | 25 |
+| Email OTP request | 20 |
+| Email financial request | 20 |
+| Email suspicious URL context | 20 before contextual handling |
+| Email risky attachment | 20 |
+
+The weights are heuristic metadata. They do not establish maliciousness and should be recalibrated with representative test data when the project gains real scan workflow integration.
+
+## Deduplication strategy
+
+The engine uses the simplest defensible policy: one contribution per unique indicator code. The first indicator instance is retained for display, while repeated instances are counted in `occurrence_count` so the result remains transparent. Repeated copies of the same keyword signal, repeated analysis of the same URL, and duplicate code records therefore do not inflate the score. Distinct rule codes remain independent contributions even when their evidence is related.
+
+## Nested email URL handling
+
+`EMAIL_CONTAINS_SUSPICIOUS_URL` is a contextual marker. When detailed `URL_*` indicators are present, the contextual marker is metadata-only and contributes zero additional points. If the contextual marker is the only evidence, it contributes at most 5 points. Detailed URL indicators therefore remain the primary evidence without allowing a generic email bonus to double-count them.
+
+## Normalization and caps
+
+The engine sums deduplicated applied contributions and clamps the result to the inclusive range 0–100. Negative points are rejected as invalid input; scores below zero cannot be produced, and totals above 100 become exactly 100. No randomization, machine learning, generative AI, or external data is used.
+
+## Risk thresholds
+
+The current centralized mapping aligns with the Django `Scan.RiskLevel` choices:
+
+| Score range | Risk level |
+|---:|---|
+| 0–19 | `VERY_LOW` |
+| 20–39 | `LOW` |
+| 40–59 | `MEDIUM` |
+| 60–79 | `HIGH` |
+| 80–100 | `CRITICAL` |
+
+The boundaries are inclusive and are tested directly. They are configuration, not template logic.
+
+## Verdict mapping
+
+| Risk level | Verdict |
+|---|---|
+| `VERY_LOW` | Safe for the configured checks — no significant indicators detected |
+| `LOW` | Low risk — review the context |
+| `MEDIUM` | Potentially suspicious |
+| `HIGH` | High-risk characteristics detected |
+| `CRITICAL` | Highly suspicious / potentially phishing |
+
+The very-low verdict is intentionally qualified. It does not mean that a URL, email, or attachment is guaranteed safe.
+
+## Breakdown, summary, and recommendations
+
+Each result includes a `ScoreBreakdownItem` with the indicator code, title, severity, configured points, applied points, evidence, and occurrence count. This lets a future frontend answer why a score was produced without recomputing the analysis.
+
+Recommendations are generated deterministically from centralized code mappings, category mappings, or the indicator’s own recommendation text. Duplicate recommendation strings are removed while preserving the first-seen order. Empty indicator input returns an empty recommendation list; results with evidence receive concise safety actions.
+
+Summaries are deterministic and tied to the resulting risk band. Empty indicators receive a cautious no-significant-indicators statement. Medium-risk results mention representative signals, while high and critical results recommend independent verification and describe the evidence as potentially phishing rather than proven maliciousness.
+
+## Failure behavior and limitations
+
+If the source analyzer failed, if indicators are missing, or if indicator data is malformed, the engine returns `success: false`, no score, no risk level, no verdict, an empty breakdown, and a bounded error string. The risk engine does not turn failed analysis into a normal low-risk result.
+
+The scoring engine is a transparent heuristic layer, not a threat-intelligence verdict system. It cannot validate domain ownership, determine whether an email sender is authentic, inspect remote content, or prove maliciousness. Its future database integration must persist the `risk-v1` rule version with the resulting score and breakdown.

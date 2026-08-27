@@ -2,7 +2,7 @@
 
 An educational Django application for examining suspicious characteristics in URLs and emails through explainable local heuristics.
 
-> **Phase 4 status:** The project foundation, interface, database models, migration, admin registrations, offline URL analyzer, offline email analyzer, analyzer tests, and rule documentation are implemented. Centralized risk scoring, scan workflow, history results, and dashboard statistics remain planned for later phases.
+> **Phase 5 status:** The project foundation, interface, database models, migration, admin registrations, offline URL analyzer, offline email analyzer, centralized risk engine, analyzer tests, and rule documentation are implemented. Complete scan workflow, frontend result integration, history results, and dashboard statistics remain planned for later phases.
 
 ## Overview
 
@@ -19,11 +19,11 @@ This is a simple Django monolith using:
 - HTML5 and CSS3
 - Minimal vanilla JavaScript
 
-The logical components are `core`, `scans`, `analysis`, and `dashboard`. Phase 4 includes the project configuration, reusable base template, responsive navigation, landing page, About page, URL and email input foundations, placeholder result page, empty history state, zero-state dashboard, Django ORM persistence models, migration, admin registrations, deterministic offline URL and email analysis, analyzer tests, documentation, and repository hygiene files.
+The logical components are `core`, `scans`, `analysis`, and `dashboard`. Phase 5 includes the project configuration, reusable base template, responsive navigation, landing page, About page, URL and email input foundations, placeholder result page, empty history state, zero-state dashboard, Django ORM persistence models, migration, admin registrations, deterministic offline URL and email analysis, centralized risk scoring, analyzer and risk-engine tests, documentation, and repository hygiene files.
 
 ## Planned features
 
-Later phases will implement centralized explainable 0–100 risk scoring, real scan workflow, detailed result rendering from persisted records, real scan history, and dashboard summaries. The Phase 3 URL analyzer and Phase 4 email analyzer return indicators and points metadata but no final score, risk level, or verdict.
+Later phases will implement complete scan workflow, detailed result rendering from persisted records, real scan history, and dashboard summaries. The Phase 3 URL analyzer and Phase 4 email analyzer return indicators and points metadata; the Phase 5 risk engine now consumes those indicators and returns a bounded score, risk level, verdict, breakdown, summary, recommendations, and `risk-v1` metadata.
 
 ## Project structure
 
@@ -65,11 +65,11 @@ Then open `http://127.0.0.1:8000/` in a browser.
 
 ## Testing
 
-Phase 4 verification includes Django system checks, migration checks, ORM model tests, URL analyzer tests, email analyzer tests, MIME and URL-reuse tests, network-safety tests, relationship tests, database-constraint tests, admin-registration tests, route rendering, template references, static assets, CSRF-protected forms, responsive layout, and honest zero or planned states. Future phases will add scoring and workflow tests.
+Phase 5 verification includes Django system checks, migration checks, ORM model tests, URL analyzer tests, email analyzer tests, risk-engine tests, MIME and URL-reuse tests, network-safety tests, relationship tests, database-constraint tests, admin-registration tests, route rendering, template references, static assets, CSRF-protected forms, responsive layout, and honest zero or planned states. Future phases will add complete workflow integration tests.
 
 ## Security boundary
 
-The application must never open, crawl, resolve, or connect to a submitted URL. Phase 4 contains URL and email analysis logic but no network client; all submitted URLs, email content, and attachment names are treated as untrusted local data only. User-provided content remains untrusted input and must continue to be escaped when rendered.
+The application must never open, crawl, resolve, or connect to a submitted URL. Phase 5 contains URL and email analysis logic plus centralized local scoring, but no network client; all submitted URLs, email content, and attachment names are treated as untrusted local data only. User-provided content remains untrusted input and must continue to be escaped when rendered.
 
 The current email foundation accepts attachment names as text only. It does not accept, execute, unpack, preview, or scan binary files. Model fields are bounded to reduce unnecessary retention of sensitive submitted content.
 

@@ -132,6 +132,54 @@ class EmailAnalysisResult:
 
 
 @dataclass(frozen=True)
+class ScoreBreakdownItem:
+    """One deduplicated contribution to a final risk score."""
+
+    code: str
+    title: str
+    severity: str
+    points: int
+    applied_points: int
+    evidence: str
+    occurrence_count: int = 1
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+@dataclass(frozen=True)
+class RiskAnalysisResult:
+    """Immutable centralized risk-engine output."""
+
+    success: bool
+    score: int | None
+    risk_level: str
+    verdict: str
+    indicators: tuple[IndicatorResult, ...] = field(default_factory=tuple)
+    score_breakdown: tuple[ScoreBreakdownItem, ...] = field(default_factory=tuple)
+    summary: str = ""
+    recommendations: tuple[str, ...] = field(default_factory=tuple)
+    rule_version: str = ""
+    error: str = ""
+    metadata: dict[str, Any] = field(default_factory=dict)
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "success": self.success,
+            "score": self.score,
+            "risk_level": self.risk_level,
+            "verdict": self.verdict,
+            "indicators": [indicator.to_dict() for indicator in self.indicators],
+            "score_breakdown": [item.to_dict() for item in self.score_breakdown],
+            "summary": self.summary,
+            "recommendations": list(self.recommendations),
+            "rule_version": self.rule_version,
+            "error": self.error,
+            "metadata": dict(self.metadata),
+        }
+
+
+@dataclass(frozen=True)
 class URLAnalysisResult:
     """The analyzer contract. It deliberately contains no score or verdict."""
 
