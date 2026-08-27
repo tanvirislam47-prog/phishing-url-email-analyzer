@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard | Phishing Analyzer{% endblock %}
+
+{% block content %}
+<section class="page-hero"><div class="container page-hero-row"><div><p class="eyebrow"><span class="eyebrow-line"></span> Overview / Phase 1</p><h1>Security signals,<br><em>at a glance.</em></h1></div><div class="hero-status"><span class="status-dot"></span><span>Foundation ready</span></div></div></section>
+<section class="dashboard-section section-pad"><div class="container"><div class="metric-grid">{% for metric in metrics %}<article class="metric-card"><span class="metric-label">{{ metric.label }}</span><strong>{{ metric.value }}</strong><span class="metric-detail">{{ metric.detail }}</span></article>{% endfor %}</div><div class="dashboard-lower"><article class="dashboard-panel"><div class="panel-heading"><div><p class="eyebrow">Recent activity</p><h2>Nothing to review yet.</h2></div><span class="panel-index">00</span></div><div class="dashboard-empty"><div class="empty-line"></div><p>Real scan records will populate this area after persistence is implemented.</p><a href="{% url 'scans:history' %}">Open scan history <span aria-hidden="true">&rarr;</span></a></div></article><aside class="dashboard-panel dashboard-panel--accent"><p class="eyebrow">System boundary</p><h2>Local by design.</h2><p>Submitted URLs are never opened, resolved, or connected to. The future dashboard will summarize only locally stored analysis results.</p><a href="{% url 'core:about' %}">Read methodology <span aria-hidden="true">&rarr;</span></a></aside></div></div></section>
+{% endblock %}

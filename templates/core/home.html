@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}Home | Phishing Analyzer{% endblock %}
+
+{% block content %}
+<section class="hero-section">
+    <div class="container hero-grid">
+        <div class="hero-copy">
+            <p class="eyebrow"><span class="eyebrow-line"></span> Local threat awareness toolkit</p>
+            <h1>See the signals<br><em>before you click.</em></h1>
+            <p class="hero-lede">Phishing URL &amp; Email Analyzer helps you inspect suspicious characteristics with explainable local heuristics—so every finding comes with context, not just a label.</p>
+            <div class="hero-actions">
+                <a class="button button--primary" href="{% url 'scans:url' %}"><span>Analyze a URL</span><span aria-hidden="true">&rarr;</span></a>
+                <a class="button button--secondary" href="{% url 'scans:email' %}"><span>Analyze an email</span><span aria-hidden="true">&rarr;</span></a>
+            </div>
+            <div class="trust-line"><span class="status-dot"></span><span>Offline-first analysis boundary</span><span class="trust-divider"></span><span>No live URL requests</span></div>
+        </div>
+        <div class="hero-visual" aria-label="Abstract security analysis visualization" role="img">
+            <div class="orb orb--outer"></div>
+            <div class="orb orb--middle"></div>
+            <div class="orb orb--inner"></div>
+            <div class="scan-ring scan-ring--one"></div>
+            <div class="scan-ring scan-ring--two"></div>
+            <div class="hero-card hero-card--top"><span class="mini-icon mini-icon--shield">+</span><span><strong>Signal map</strong><small>Explainable by default</small></span><span class="hero-card-arrow">↗</span></div>
+            <div class="hero-card hero-card--bottom"><span class="mini-icon mini-icon--pulse">∿</span><span><strong>Safe boundary</strong><small>String analysis only</small></span><span class="live-label"><span></span> READY</span></div>
+            <span class="visual-label visual-label--one">LOCAL HEURISTICS</span>
+            <span class="visual-label visual-label--two">/ 01</span>
+        </div>
+    </div>
+</section>
+
+<section class="safety-banner">
+    <div class="container safety-inner">
+        <div class="safety-icon" aria-hidden="true">!</div>
+        <div><strong>Safety boundary</strong><p>The analyzer does not open, crawl, resolve, or connect to submitted URLs. It evaluates the text you provide.</p></div>
+        <a href="{% url 'core:about' %}">Read the methodology <span aria-hidden="true">&rarr;</span></a>
+    </div>
+</section>
+
+<section class="feature-section section-pad">
+    <div class="container">
+        <div class="section-heading"><div><p class="eyebrow"><span class="eyebrow-line"></span> What you can inspect</p><h2>Clarity over certainty.</h2></div><p class="section-intro">A focused toolkit for understanding common phishing signals across the two places they appear most often: links and messages.</p></div>
+        <div class="feature-grid">
+            <article class="feature-card"><div class="feature-number">01</div><div class="feature-icon">↗</div><h3>URL analysis</h3><p>Review structural characteristics such as hostname shape, encoding, ports, depth, and suspicious notation.</p><a href="{% url 'scans:url' %}">Inspect a URL <span aria-hidden="true">&rarr;</span></a></article>
+            <article class="feature-card"><div class="feature-number">02</div><div class="feature-icon">✉</div><h3>Email analysis</h3><p>Examine sender context, social-engineering language, links, Reply-To details, and attachment names.</p><a href="{% url 'scans:email' %}">Inspect an email <span aria-hidden="true">&rarr;</span></a></article>
+            <article class="feature-card"><div class="feature-number">03</div><div class="feature-icon">⌁</div><h3>Explainable risk score</h3><p>Future results will show the signals behind a score rather than hiding the reasoning behind a black box.</p><a href="{% url 'core:about' %}">See the approach <span aria-hidden="true">&rarr;</span></a></article>
+            <article class="feature-card"><div class="feature-number">04</div><div class="feature-icon">▤</div><h3>Scan history</h3><p>A dedicated history and dashboard foundation is ready for saved analyses in a later project phase.</p><a href="{% url 'scans:history' %}">View history <span aria-hidden="true">&rarr;</span></a></article>
+        </div>
+    </div>
+</section>
+
+<section class="method-section section-pad">
+    <div class="container method-grid">
+        <div><p class="eyebrow"><span class="eyebrow-line"></span> Methodology preview</p><h2>Evidence you can<br><em>understand.</em></h2></div>
+        <div class="method-copy"><p>The analyzer is designed around local, deterministic rules. Each future indicator will show what was detected, why it matters, and what action is sensible next.</p><div class="method-points"><div><span>01</span><strong>Parse locally</strong><small>No network lookups</small></div><div><span>02</span><strong>Explain signals</strong><small>Evidence with context</small></div><div><span>03</span><strong>Guide action</strong><small>Recommendations, not guarantees</small></div></div></div>
+    </div>
+</section>
+{% endblock %}

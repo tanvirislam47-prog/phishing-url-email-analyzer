@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+
+{% block title %}History | Phishing Analyzer{% endblock %}
+
+{% block content %}
+<section class="page-hero page-hero--compact"><div class="container narrow-container"><p class="eyebrow"><span class="eyebrow-line"></span> Scan history</p><h1>A record of<br><em>what you reviewed.</em></h1><p class="page-lede">Completed analyses will appear here once scan persistence is introduced. Phase 1 does not create records.</p></div></section>
+<section class="section-pad"><div class="container"><div class="empty-state"><div class="empty-visual"><span></span><span></span><span></span></div><p class="eyebrow">No saved activity</p><h2>No analyses yet.</h2><p>Start with a URL or email submission. Results and history storage will be connected in a later phase.</p><div class="empty-actions"><a class="button button--primary" href="{% url 'scans:url' %}">Analyze a URL <span aria-hidden="true">&rarr;</span></a><a class="button button--secondary" href="{% url 'scans:email' %}">Analyze an email <span aria-hidden="true">&rarr;</span></a></div></div></div></section>
+{% endblock %}

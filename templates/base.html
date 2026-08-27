@@ -1,0 +1,62 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Explainable, local heuristic analysis for suspicious URLs and emails.">
+    <title>{% block title %}Phishing URL &amp; Email Analyzer{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+    <div class="site-shell">
+        <header class="site-header">
+            <div class="container header-inner">
+                <a class="brand" href="{% url 'core:home' %}" aria-label="Phishing Analyzer home">
+                    <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></span>
+                    <span class="brand-copy"><strong>PHISHING</strong><small>ANALYZER</small></span>
+                </a>
+                <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-navigation">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span></span><span></span><span></span>
+                </button>
+                <nav id="primary-navigation" class="primary-nav" aria-label="Primary navigation">
+                    <a href="{% url 'core:home' %}">Home</a>
+                    <a href="{% url 'dashboard:index' %}">Dashboard</a>
+                    <a href="{% url 'scans:url' %}">Analyze URL</a>
+                    <a href="{% url 'scans:email' %}">Analyze Email</a>
+                    <a href="{% url 'scans:history' %}">History</a>
+                    <a href="{% url 'core:about' %}">About</a>
+                </nav>
+            </div>
+        </header>
+
+        <main id="main-content">
+            {% if messages %}
+                <div class="container message-stack" aria-live="polite">
+                    {% for message in messages %}
+                        <div class="message message--{{ message.tags|default:'info' }}">
+                            <span class="message-dot" aria-hidden="true"></span>{{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            {% block content %}{% endblock %}
+        </main>
+
+        <footer class="site-footer">
+            <div class="container footer-inner">
+                <p><span class="footer-pulse" aria-hidden="true"></span> Built for careful, explainable analysis.</p>
+                <p>Offline-first by design &middot; <a href="{% url 'core:about' %}">Methodology and limitations</a></p>
+            </div>
+        </footer>
+    </div>
+    <script src="{% static 'js/app.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
