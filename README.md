@@ -1,6 +1,8 @@
 # Phishing URL & Email Analyzer
 
-**Local, explainable phishing indicator analysis for URLs and email text.**
+> Local, explainable phishing indicator analysis for URLs and email text.
+>
+> [![Python](https://img.shields.io/badge/Python-3.x-3776AB?logo=python&logoColor=white)](https://www.python.org/) [![Django](https://img.shields.io/badge/Django-5.2-0C4B33?logo=django&logoColor=white)](https://www.djangoproject.com/) [![Security](https://img.shields.io/badge/Focus-Cybersecurity-1f6feb)](docs/security.md) [![Tests](https://img.shields.io/badge/Tests-187%20passing-2ea44f)](docs/testing.md)
 
 Phishing URL & Email Analyzer is a university and portfolio-ready Django application for reviewing suspicious links and message context without opening submitted URLs. It uses deterministic local heuristics to surface evidence, explain why each signal matters, and produce a bounded risk score that a person can review rather than blindly trust.
 
@@ -12,7 +14,7 @@ The project focuses on careful analysis at the moment before a user clicks a lin
 
 The result is an explainable report containing a persisted score from 0–100, a named risk level, a cautious verdict, detected indicators, evidence, explanations, recommendations, and technical metadata. Historical results can be reviewed through the all-database History page and server-derived Dashboard.
 
-## Features
+## Key Features
 
 - **URL analysis:** structural inspection of schemes, hostnames, IP-like values, ports, length, depth, encoding, suspicious keywords, shorteners, punycode, and other local indicators.
 - **Email analysis:** sender and Reply-To context, subject and body language, urgency and social-engineering indicators, suspicious links, HTML visible-link mismatches, and risky attachment names.
@@ -57,6 +59,14 @@ Email indicators cover urgency, threats, account suspension language, credential
 The `RiskEngine` is framework-independent and consumes structured indicators from the analyzers. It deduplicates repeated codes, handles nested email URL evidence without double-counting, applies the centralized `risk-v1` weights, clamps the result to 0–100, maps it to the five risk bands, and produces a transparent breakdown, summary, verdict, and recommendations.
 
 The score is a decision-support signal, not a claim that a message or URL is safe or malicious. The persisted score and risk level are displayed directly by the result interface; no score is calculated in browser JavaScript.
+
+| Score | Risk |
+| --- | --- |
+| 0–19 | Very Low |
+| 20–39 | Low |
+| 40–59 | Medium |
+| 60–79 | High |
+| 80–100 | Critical |
 
 ## Dashboard & History
 
@@ -148,17 +158,31 @@ The verified baseline contains **187 passing tests** across model constraints, a
 
 ## Screenshots
 
-Representative local screenshots are maintained under [`docs/screenshots/`](docs/screenshots/) for portfolio documentation. They are generated from the local browser workflow and contain no credentials, private message content, external-service data, or permanent fake records.
+Representative local screenshots are maintained under [`docs/screenshots/`](docs/screenshots/) for portfolio documentation. They were captured from the local browser workflow using genuine local records and contain no credentials, private message content, external-service data, or permanent fake records.
 
-| Screen | Preview |
+### Home & Analysis
+
+| Home — product overview and analyzer entry points | URL Analyzer — local URL inspection interface |
 |---|---|
-| Home | [`home.webp`](docs/screenshots/home.webp) |
-| URL analyzer | [`url-analyzer.webp`](docs/screenshots/url-analyzer.webp) |
-| URL result | [`url-result.webp`](docs/screenshots/url-result.webp) |
-| Email analyzer | [`email-analyzer.webp`](docs/screenshots/email-analyzer.webp) |
-| Email result | [`email-result.webp`](docs/screenshots/email-result.webp) |
-| Dashboard | [`dashboard.webp`](docs/screenshots/dashboard.webp) |
-| History | [`history.webp`](docs/screenshots/history.webp) |
+| ![Home — product overview and analyzer entry points](docs/screenshots/home.webp) | ![URL Analyzer — local URL inspection interface](docs/screenshots/url-analyzer.webp) |
+
+### Email Analysis
+
+| Email Analyzer — structured email inspection interface |
+|---|
+| ![Email Analyzer — structured email inspection interface](docs/screenshots/email-analyzer.webp) |
+
+### Analysis Results
+
+| URL Result — explainable score, indicators, evidence, and recommendations | Email Result — structured email security findings |
+|---|---|
+| ![URL Result — explainable score, indicators, evidence, and recommendations](docs/screenshots/url-result.webp) | ![Email Result — structured email security findings](docs/screenshots/email-result.webp) |
+
+### Monitoring & History
+
+| Dashboard — aggregated scan statistics and risk distribution | History — searchable and filterable persisted scan records |
+|---|---|
+| ![Dashboard — aggregated scan statistics and risk distribution](docs/screenshots/dashboard.webp) | ![History — searchable and filterable persisted scan records](docs/screenshots/history.webp) |
 
 ## Limitations
 
