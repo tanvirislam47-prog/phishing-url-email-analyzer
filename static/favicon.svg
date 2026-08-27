@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title desc">
+  <title id="title">Phishing Analyzer</title>
+  <desc id="desc">Three ascending acid-green bars on a dark background.</desc>
+  <rect width="64" height="64" rx="12" fill="#0b1118"/>
+  <path d="M16 42h8V28h-8zm12 0h8V20h-8zm12 0h8V12h-8z" fill="#c7f36b"/>
+  <path d="M14 48h36" stroke="#76d7d4" stroke-width="2" stroke-linecap="round" opacity=".8"/>
+</svg>

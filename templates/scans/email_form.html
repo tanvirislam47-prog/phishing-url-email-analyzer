@@ -7,7 +7,7 @@
     <div class="container narrow-container">
         <p class="eyebrow"><span class="eyebrow-line"></span> Email analyzer / 02</p>
         <h1>Read the message<br><em>behind the pressure.</em></h1>
-        <p class="page-lede">Capture the visible context of a suspicious email for local analysis. Only text fields and attachment names are accepted; no files or network services are used.</p>
+        <p class="page-lede">Paste message headers, subject, body text, and optional attachment names for local analysis. No files or network services are used.</p>
     </div>
 </section>
 <section class="form-section section-pad">
@@ -21,12 +21,12 @@
                 {% csrf_token %}
                 {% for error in form.non_field_errors %}<p class="field-error">{{ error }}</p>{% endfor %}
                 <div class="form-row">
-                    <div class="field-group">{{ form.sender.label_tag }}{{ form.sender }}{% for error in form.sender.errors %}<p class="field-error">{{ error }}</p>{% endfor %}</div>
-                    <div class="field-group">{{ form.reply_to.label_tag }}{{ form.reply_to }}{% for error in form.reply_to.errors %}<p class="field-error">{{ error }}</p>{% endfor %}</div>
+                    <div class="field-group">{{ form.sender.label_tag }}{{ form.sender }}<p class="field-meta">Maximum length: 320 characters</p>{% for error in form.sender.errors %}<p class="field-error">{{ error }}</p>{% endfor %}</div>
+                    <div class="field-group">{{ form.reply_to.label_tag }}{{ form.reply_to }}<p class="field-meta">Maximum length: 320 characters</p>{% for error in form.reply_to.errors %}<p class="field-error">{{ error }}</p>{% endfor %}</div>
                 </div>
-                <div class="field-group">{{ form.subject.label_tag }}{{ form.subject }}{% for error in form.subject.errors %}<p class="field-error">{{ error }}</p>{% endfor %}</div>
-                <div class="field-group">{{ form.body.label_tag }}{{ form.body }}{% for error in form.body.errors %}<p class="field-error">{{ error }}</p>{% endfor %}</div>
-                <div class="field-group">{{ form.attachment_names.label_tag }}{{ form.attachment_names }}<p class="field-help">{{ form.attachment_names.help_text }}</p>{% for error in form.attachment_names.errors %}<p class="field-error">{{ error }}</p>{% endfor %}</div>
+                <div class="field-group">{{ form.subject.label_tag }}{{ form.subject }}<p class="field-meta">Maximum length: 500 characters</p>{% for error in form.subject.errors %}<p class="field-error">{{ error }}</p>{% endfor %}</div>
+                <div class="field-group">{{ form.body.label_tag }}{{ form.body }}<p class="field-meta">Maximum length: 30,000 characters</p>{% for error in form.body.errors %}<p class="field-error">{{ error }}</p>{% endfor %}</div>
+                <div class="field-group">{{ form.attachment_names.label_tag }}{{ form.attachment_names }}<p class="field-help">{{ form.attachment_names.help_text }}</p><p class="field-meta">Maximum length: 2,000 characters</p>{% for error in form.attachment_names.errors %}<p class="field-error">{{ error }}</p>{% endfor %}</div>
                 <div class="form-actions">
                     <button class="button button--primary" type="submit"><span>Analyze email locally</span><span aria-hidden="true">&rarr;</span></button>
                     <button class="button button--ghost" type="reset">Clear</button>

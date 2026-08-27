@@ -4,8 +4,10 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Explainable, local heuristic analysis for suspicious URLs and emails.">
+    <meta name="description" content="Local, explainable phishing indicator analysis for URLs and email text.">
+    <meta name="theme-color" content="#0b1118">
     <title>{% block title %}Phishing URL &amp; Email Analyzer{% endblock %}</title>
+    <link rel="icon" href="{% static 'favicon.svg' %}" type="image/svg+xml">
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     {% block extra_head %}{% endblock %}
 </head>
@@ -24,9 +26,9 @@
                 </button>
                 <nav id="primary-navigation" class="primary-nav" aria-label="Primary navigation">
                     <a class="{% if request.resolver_match.app_name == 'core' and request.resolver_match.url_name == 'home' %}is-active{% endif %}"{% if request.resolver_match.app_name == 'core' and request.resolver_match.url_name == 'home' %} aria-current="page"{% endif %} href="{% url 'core:home' %}">Home</a>
+                    <a class="{% if request.resolver_match.app_name == 'scans' and request.resolver_match.url_name == 'url' %}is-active{% endif %}"{% if request.resolver_match.app_name == 'scans' and request.resolver_match.url_name == 'url' %} aria-current="page"{% endif %} href="{% url 'scans:url' %}">URL Analyzer</a>
+                    <a class="{% if request.resolver_match.app_name == 'scans' and request.resolver_match.url_name == 'email' %}is-active{% endif %}"{% if request.resolver_match.app_name == 'scans' and request.resolver_match.url_name == 'email' %} aria-current="page"{% endif %} href="{% url 'scans:email' %}">Email Analyzer</a>
                     <a class="{% if request.resolver_match.app_name == 'dashboard' %}is-active{% endif %}"{% if request.resolver_match.app_name == 'dashboard' %} aria-current="page"{% endif %} href="{% url 'dashboard:index' %}">Dashboard</a>
-                    <a class="{% if request.resolver_match.app_name == 'scans' and request.resolver_match.url_name == 'url' %}is-active{% endif %}"{% if request.resolver_match.app_name == 'scans' and request.resolver_match.url_name == 'url' %} aria-current="page"{% endif %} href="{% url 'scans:url' %}">Analyze URL</a>
-                    <a class="{% if request.resolver_match.app_name == 'scans' and request.resolver_match.url_name == 'email' %}is-active{% endif %}"{% if request.resolver_match.app_name == 'scans' and request.resolver_match.url_name == 'email' %} aria-current="page"{% endif %} href="{% url 'scans:email' %}">Analyze Email</a>
                     <a class="{% if request.resolver_match.app_name == 'scans' and request.resolver_match.url_name == 'history' %}is-active{% endif %}"{% if request.resolver_match.app_name == 'scans' and request.resolver_match.url_name == 'history' %} aria-current="page"{% endif %} href="{% url 'scans:history' %}">History</a>
                     <a class="{% if request.resolver_match.app_name == 'core' and request.resolver_match.url_name == 'about' %}is-active{% endif %}"{% if request.resolver_match.app_name == 'core' and request.resolver_match.url_name == 'about' %} aria-current="page"{% endif %} href="{% url 'core:about' %}">About</a>
                 </nav>

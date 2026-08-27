@@ -6,12 +6,12 @@
 <section class="hero-section">
     <div class="container hero-grid">
         <div class="hero-copy">
-            <p class="eyebrow"><span class="eyebrow-line"></span> Local threat awareness toolkit</p>
-            <h1>See the signals<br><em>before you click.</em></h1>
-            <p class="hero-lede">Phishing URL &amp; Email Analyzer helps you inspect suspicious characteristics with explainable local heuristics—so every finding comes with context, not just a label.</p>
+            <p class="eyebrow"><span class="eyebrow-line"></span> Local, explainable phishing analysis</p>
+            <h1>Phishing URL &amp;<br><em>Email Analyzer.</em></h1>
+            <p class="hero-lede">Analyze suspicious URLs and email content locally using explainable security indicators. Every finding preserves evidence and context without opening submitted links.</p>
             <div class="hero-actions">
-                <a class="button button--primary" href="{% url 'scans:url' %}"><span>Analyze a URL</span><span aria-hidden="true">&rarr;</span></a>
-                <a class="button button--secondary" href="{% url 'scans:email' %}"><span>Analyze an email</span><span aria-hidden="true">&rarr;</span></a>
+                <a class="button button--primary" href="{% url 'scans:url' %}"><span>URL Analyzer</span><span aria-hidden="true">&rarr;</span></a>
+                <a class="button button--secondary" href="{% url 'scans:email' %}"><span>Email Analyzer</span><span aria-hidden="true">&rarr;</span></a>
             </div>
             <div class="trust-line"><span class="status-dot"></span><span>Offline-first analysis boundary</span><span class="trust-divider"></span><span>No live URL requests</span></div>
         </div>
@@ -41,10 +41,10 @@
     <div class="container">
         <div class="section-heading"><div><p class="eyebrow"><span class="eyebrow-line"></span> What you can inspect</p><h2>Clarity over certainty.</h2></div><p class="section-intro">A focused toolkit for understanding common phishing signals across the two places they appear most often: links and messages.</p></div>
         <div class="feature-grid">
-            <article class="feature-card"><div class="feature-number">01</div><div class="feature-icon">↗</div><h3>URL analysis</h3><p>Review structural characteristics such as hostname shape, encoding, ports, depth, and suspicious notation.</p><a href="{% url 'scans:url' %}">Inspect a URL <span aria-hidden="true">&rarr;</span></a></article>
-            <article class="feature-card"><div class="feature-number">02</div><div class="feature-icon">✉</div><h3>Email analysis</h3><p>Examine sender context, social-engineering language, links, Reply-To details, and attachment names.</p><a href="{% url 'scans:email' %}">Inspect an email <span aria-hidden="true">&rarr;</span></a></article>
-            <article class="feature-card"><div class="feature-number">03</div><div class="feature-icon">⌁</div><h3>Explainable risk score</h3><p>Results show the signals behind a score rather than hiding the reasoning behind a black box.</p><a href="{% url 'core:about' %}">See the approach <span aria-hidden="true">&rarr;</span></a></article>
-            <article class="feature-card"><div class="feature-number">04</div><div class="feature-icon">▤</div><h3>Scan history</h3><p>Review saved analyses in the local history and dashboard views, with no fabricated statistics when the database is empty.</p><a href="{% url 'scans:history' %}">View history <span aria-hidden="true">&rarr;</span></a></article>
+            <article class="feature-card"><div class="feature-number">01</div><div class="feature-icon">⌁</div><h3>Explainable indicators</h3><p>Every finding preserves evidence, context, and a practical recommendation for review.</p><a href="{% url 'core:about' %}">See the approach <span aria-hidden="true">&rarr;</span></a></article>
+            <article class="feature-card"><div class="feature-number">02</div><div class="feature-icon">◈</div><h3>Local / offline analysis</h3><p>URL strings and email text stay inside the application; submitted links are never opened.</p><a href="{% url 'core:about' %}">Review the boundary <span aria-hidden="true">&rarr;</span></a></article>
+            <article class="feature-card"><div class="feature-number">03</div><div class="feature-icon">◌</div><h3>Bounded risk scoring</h3><p>A persisted 0–100 score and named risk band make the result easy to compare and discuss.</p><a href="{% url 'scans:url' %}">Run a local scan <span aria-hidden="true">&rarr;</span></a></article>
+            <article class="feature-card"><div class="feature-number">04</div><div class="feature-icon">▤</div><h3>History &amp; dashboard</h3><p>Saved analyses remain reviewable through real all-database history and server-side summaries.</p><a href="{% url 'dashboard:index' %}">Open dashboard <span aria-hidden="true">&rarr;</span></a></article>
         </div>
     </div>
 </section>

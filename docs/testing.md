@@ -58,3 +58,9 @@ The Phase 8 Django security suite covers escaped URL/email/indicator content, sa
 Source inspection confirms there are no unsafe `|safe` template filters, dynamic DOM injection APIs, process execution calls, or production network clients. The dependency surface remains Django only. The external Google Fonts request was removed so the browser UI remains local/offline; system font fallbacks preserve the established design.
 
 Manual Phase 8 browser QA covered Home, URL form and validation, normal URL submission, email form and sample fill, suspicious email submission, persisted result refresh, History, Dashboard, About, filters, safe 404 handling, and form recovery. Pagination edge behavior is covered by the focused automated tests without seeding artificial persistent records into the deliverable database. Browser notes are recorded in `docs/phase8-browser-verification.md`.
+
+## Phase 9 product UI and portfolio QA
+
+Phase 9 is presentation-only. The regression expectation is that all previous tests continue to pass while templates, CSS, minimal JavaScript, local favicon assets, README content, and architecture documentation become more consistent and portfolio-ready. The analyzers, RiskEngine, scan service, database models, migrations, and route semantics are unchanged.
+
+Manual browser QA covers the refreshed Home hero and navigation, URL Analyzer form and visible 2,048-character limit, Email Analyzer form and visible field limits, genuine persisted URL and email result reports, Dashboard metrics and all-database notice, History filters and actions, About methodology and technology stack, safe 404 behavior, empty and validation states, favicon/static loading, keyboard-visible focus styling, and available-viewport overflow inspection. Representative local screenshots are stored under `docs/screenshots/` and contain no credentials or private message content.

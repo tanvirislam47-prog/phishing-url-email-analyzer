@@ -16,11 +16,11 @@ document.addEventListener("DOMContentLoaded", () => {
     if (sampleButton && emailForm) {
         sampleButton.addEventListener("click", () => {
             const values = {
-                id_sender: "security@example.invalid",
-                id_reply_to: "reply@example.invalid",
-                id_subject: "Please verify your account",
-                id_body: "Hello,\n\nWe noticed an unusual sign-in. Please review your account through the official website you normally use.\n\nRegards,\nSecurity Team",
-                id_attachment_names: "",
+                id_sender: "security@example.com",
+                id_reply_to: "reply@external.example",
+                id_subject: "Urgent action required",
+                id_body: "Hello,\n\nWe noticed an unusual sign-in. Please click the link below immediately to verify your password and secure your account.\n\nhttps://bit.ly/login\n\nRegards,\nSecurity Team",
+                id_attachment_names: "update.docm, instructions.pdf",
             };
 
             Object.entries(values).forEach(([id, value]) => {
