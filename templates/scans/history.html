@@ -3,6 +3,34 @@
 {% block title %}History | Phishing Analyzer{% endblock %}
 
 {% block content %}
-<section class="page-hero page-hero--compact"><div class="container narrow-container"><p class="eyebrow"><span class="eyebrow-line"></span> Scan history</p><h1>A record of<br><em>what you reviewed.</em></h1><p class="page-lede">Completed analyses will appear here once scan persistence is introduced. Phase 1 does not create records.</p></div></section>
-<section class="section-pad"><div class="container"><div class="empty-state"><div class="empty-visual"><span></span><span></span><span></span></div><p class="eyebrow">No saved activity</p><h2>No analyses yet.</h2><p>Start with a URL or email submission. Results and history storage will be connected in a later phase.</p><div class="empty-actions"><a class="button button--primary" href="{% url 'scans:url' %}">Analyze a URL <span aria-hidden="true">&rarr;</span></a><a class="button button--secondary" href="{% url 'scans:email' %}">Analyze an email <span aria-hidden="true">&rarr;</span></a></div></div></div></section>
+<section class="page-hero page-hero--compact">
+    <div class="container page-hero-row">
+        <div>
+            <p class="eyebrow"><span class="eyebrow-line"></span> Scan history / local database</p>
+            <h1>A record of<br><em>what you reviewed.</em></h1>
+            <p class="page-lede">History represents all scans stored in this local application database. It is not user-specific because authentication is not enabled.</p>
+        </div>
+        <div class="hero-status"><span class="status-dot"></span>{{ history_total }} record{{ history_total|pluralize }}</div>
+    </div>
+</section>
+<section class="section-pad history-section">
+    <div class="container history-container">
+        <form class="history-toolbar" method="get">
+            <div class="history-search"><label class="sr-only" for="history-search">Search history</label><input id="history-search" class="form-control" type="search" name="q" value="{{ search }}" placeholder="Search ID, hostname, sender, subject..." maxlength="100"><button class="button button--primary" type="submit">Search</button></div>
+            <div class="history-filters">
+                <label><span>Type</span><select name="type"><option value=""{% if not selected_type %} selected{% endif %}>All scans</option><option value="url"{% if selected_type == "url" %} selected{% endif %}>URL</option><option value="email"{% if selected_type == "email" %} selected{% endif %}>Email</option></select></label>
+                <label><span>Risk</span><select name="risk"><option value=""{% if not selected_risk %} selected{% endif %}>All risk levels</option><option value="very_low"{% if selected_risk == "very_low" %} selected{% endif %}>Very Low</option><option value="low"{% if selected_risk == "low" %} selected{% endif %}>Low</option><option value="medium"{% if selected_risk == "medium" %} selected{% endif %}>Medium</option><option value="high"{% if selected_risk == "high" %} selected{% endif %}>High</option><option value="critical"{% if selected_risk == "critical" %} selected{% endif %}>Critical</option></select></label>
+                <label><span>Status</span><select name="status"><option value=""{% if not selected_status %} selected{% endif %}>All statuses</option><option value="completed"{% if selected_status == "completed" %} selected{% endif %}>Completed</option><option value="failed"{% if selected_status == "failed" %} selected{% endif %}>Failed</option></select></label>
+                <a class="button button--ghost" href="{% url 'scans:history' %}">Reset</a>
+            </div>
+        </form>
+
+        {% if page_obj.object_list %}
+        <div class="history-table-wrap"><table class="history-table"><caption class="sr-only">Persisted scan history</caption><thead><tr><th scope="col">Scan</th><th scope="col">Type / subject</th><th scope="col">Assessment</th><th scope="col">Created</th><th scope="col">Duration</th><th scope="col">Action</th></tr></thead><tbody>{% for scan in page_obj %}<tr><td><span class="history-id">#{{ scan.pk }}</span><span class="history-status history-status--{{ scan.status|lower }}">{{ scan.get_status_display }}</span></td><td><strong class="history-type">{{ scan.get_scan_type_display }}</strong>{% if scan.scan_type == "URL" %}<span class="history-secondary">{{ scan.url_scan.hostname|default:"No hostname" }}</span>{% else %}<span class="history-secondary">{{ scan.email_scan.subject|default:scan.email_scan.sender|default:"No subject" }}</span>{% endif %}</td><td>{% if scan.status == "COMPLETED" %}<span class="risk-label risk-label--{{ scan.risk_level|lower }}">{{ scan.get_risk_level_display }}</span><strong class="history-score">{{ scan.score }}/100</strong><span class="history-secondary">{{ scan.verdict }}</span>{% else %}<span class="history-failed-copy">Analysis unavailable</span><span class="history-secondary">No result was produced</span>{% endif %}</td><td><span class="history-date">{{ scan.created_at|date:"M j, Y" }}</span><span class="history-secondary">{{ scan.created_at|date:"H:i" }}</span></td><td><span class="history-duration">{{ scan.analysis_duration_ms|default:"0" }} ms</span></td><td><a class="history-action" href="{% url 'scans:result-detail' scan_id=scan.pk %}">{% if scan.status == "COMPLETED" %}View result{% else %}View status{% endif %}<span aria-hidden="true">&rarr;</span></a></td></tr>{% endfor %}</tbody></table></div>
+        <div class="history-pagination"><span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span><div>{% if page_obj.has_previous %}<a class="button button--ghost" href="?{% if query_string %}{{ query_string }}&amp;{% endif %}page={{ page_obj.previous_page_number }}">Previous</a>{% endif %}{% if page_obj.has_next %}<a class="button button--secondary" href="?{% if query_string %}{{ query_string }}&amp;{% endif %}page={{ page_obj.next_page_number }}">Next</a>{% endif %}</div></div>
+        {% else %}
+        <div class="empty-state history-empty"><div class="empty-visual"><span></span><span></span><span></span></div><p class="eyebrow">No matching activity</p><h2>{% if search or selected_type or selected_risk or selected_status %}No scans match these filters.{% else %}No scans yet.{% endif %}</h2><p>{% if search or selected_type or selected_risk or selected_status %}Try clearing a filter or searching for another persisted record.{% else %}Run a URL or email analysis to see results here. Nothing is fabricated when the database is empty.{% endif %}</p><div class="empty-actions"><a class="button button--primary" href="{% url 'scans:url' %}">Analyze a URL <span aria-hidden="true">&rarr;</span></a><a class="button button--secondary" href="{% url 'scans:email' %}">Analyze an email <span aria-hidden="true">&rarr;</span></a></div></div>
+        {% endif %}
+    </div>
+</section>
 {% endblock %}

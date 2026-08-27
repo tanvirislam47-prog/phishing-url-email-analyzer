@@ -26,12 +26,12 @@
                     <span></span><span></span><span></span>
                 </button>
                 <nav id="primary-navigation" class="primary-nav" aria-label="Primary navigation">
-                    <a href="{% url 'core:home' %}">Home</a>
-                    <a href="{% url 'dashboard:index' %}">Dashboard</a>
-                    <a href="{% url 'scans:url' %}">Analyze URL</a>
-                    <a href="{% url 'scans:email' %}">Analyze Email</a>
-                    <a href="{% url 'scans:history' %}">History</a>
-                    <a href="{% url 'core:about' %}">About</a>
+                    <a class="{% if request.resolver_match.app_name == 'core' and request.resolver_match.url_name == 'home' %}is-active{% endif %}"{% if request.resolver_match.app_name == 'core' and request.resolver_match.url_name == 'home' %} aria-current="page"{% endif %} href="{% url 'core:home' %}">Home</a>
+                    <a class="{% if request.resolver_match.app_name == 'dashboard' %}is-active{% endif %}"{% if request.resolver_match.app_name == 'dashboard' %} aria-current="page"{% endif %} href="{% url 'dashboard:index' %}">Dashboard</a>
+                    <a class="{% if request.resolver_match.app_name == 'scans' and request.resolver_match.url_name == 'url' %}is-active{% endif %}"{% if request.resolver_match.app_name == 'scans' and request.resolver_match.url_name == 'url' %} aria-current="page"{% endif %} href="{% url 'scans:url' %}">Analyze URL</a>
+                    <a class="{% if request.resolver_match.app_name == 'scans' and request.resolver_match.url_name == 'email' %}is-active{% endif %}"{% if request.resolver_match.app_name == 'scans' and request.resolver_match.url_name == 'email' %} aria-current="page"{% endif %} href="{% url 'scans:email' %}">Analyze Email</a>
+                    <a class="{% if request.resolver_match.app_name == 'scans' and request.resolver_match.url_name == 'history' %}is-active{% endif %}"{% if request.resolver_match.app_name == 'scans' and request.resolver_match.url_name == 'history' %} aria-current="page"{% endif %} href="{% url 'scans:history' %}">History</a>
+                    <a class="{% if request.resolver_match.app_name == 'core' and request.resolver_match.url_name == 'about' %}is-active{% endif %}"{% if request.resolver_match.app_name == 'core' and request.resolver_match.url_name == 'about' %} aria-current="page"{% endif %} href="{% url 'core:about' %}">About</a>
                 </nav>
             </div>
         </header>

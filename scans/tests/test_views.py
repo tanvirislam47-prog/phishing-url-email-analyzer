@@ -93,8 +93,9 @@ class PhaseSixViewTests(TestCase):
         response = self.client.get(reverse("scans:result-detail", kwargs={"scan_id": 99999}))
         self.assertEqual(response.status_code, 404)
 
-    def test_dashboard_remains_honest_phase_six_boundary(self):
+    def test_dashboard_remains_honest_phase_seven_zero_state(self):
         response = self.client.get(reverse("dashboard:index"))
         self.assertContains(response, "Total scans")
         self.assertContains(response, ">0<")
-        self.assertContains(response, "No analyses recorded")
+        self.assertContains(response, "Nothing to review yet.")
+        self.assertContains(response, "All-database view")

@@ -113,10 +113,20 @@ The service layer measures local duration with a monotonic timer and computes a 
 
 The stable result route is `/scans/result/<scan_id>/`. A GET retrieves persisted records and renders them without rerunning any analyzer or the RiskEngine. The result page displays bounded evidence, explanations, recommendations, URL technical details or email context, and a clear local-analysis limitation.
 
+## Phase 7 history and dashboard read models
+
+Phase 7 adds read-only database views over the persisted `Scan` records. The history page uses a filtered and ordered ORM queryset, selects only useful type-specific detail rows for display, and passes the queryset through Django `Paginator` with 15 records per page. Type, risk, and status filters are normalized from GET parameters, and a bounded search covers scan ID, URL hostname/original URL, sender, sender domain, Reply-To, and subject. Full email bodies are intentionally excluded from history search and display.
+
+History pagination preserves active filters through an encoded query string. Each row links to the existing `/scans/result/<scan_id>/` route; no analyzer or RiskEngine call is made while browsing, filtering, searching, or refreshing history. Failed scans remain visible with a safe status message and without internal error text.
+
+The dashboard calculates all displayed values server-side from persisted rows. A small set of ORM aggregate queries produces total, URL, email, completed, failed, high, critical, and safe/low counts; a completed-only aggregate supplies average, maximum, and minimum scores; a grouped query supplies the five-level risk distribution; and one bounded recent-activity query supplies the latest records. Risk bars and score tracks are visual representations of those server-derived values, not JavaScript-generated statistics.
+
+Because authentication is not enabled, history and dashboard are explicitly an **all-scans view for this local application database**, not “my scans” and not user-isolated data. Raw email bodies, raw email content, and unnecessary attachment data are not exposed in the list or dashboard views.
+
 ## Planned architecture
 
-Later phases will add real history, dashboard statistics, authentication, and any additional product capabilities. The current URL analyzer, email analyzer, risk engine, and Phase 6 workflow remain local and separate from external reputation services.
+Later phases may add authentication, user-specific isolation, and any additional product capabilities. The current URL analyzer, email analyzer, risk engine, Phase 6 workflow, and Phase 7 read models remain local and separate from external reputation services.
 
 ## Phase boundary
 
-Phase 6 implements local end-to-end scan orchestration and persisted result rendering in addition to the Phase 3 URL analyzer, Phase 4 email analyzer, and Phase 5 risk engine. It does not implement real history functionality, dashboard statistics, external APIs, DNS, live HTTP requests, machine learning, binary attachment uploads, authentication, or background workers.
+Phase 7 implements database-backed history filtering, bounded search, pagination, server-side dashboard aggregation, risk/type distributions, recent activity, active navigation states, and responsive presentation in addition to the Phase 6 workflow. It does not implement user-specific history, authentication, external APIs, DNS, live HTTP requests, machine learning, binary attachment uploads, or background workers.

@@ -2,9 +2,9 @@
 
 ## Foundation and model checks
 
-The foundation checks cover Django system checks, migration cleanliness, template rendering, route resolution, static-file references, form rendering, CSRF tokens, ORM relationships, constraints, admin registration, and honest empty or planned states.
+The foundation checks cover Django system checks, migration cleanliness, template rendering, route resolution, static-file references, form rendering, CSRF tokens, ORM relationships, constraints, admin registration, and safe empty or planned states.
 
-## Analyzer tests
+## Analyzer and risk-engine tests
 
 The Phase 3 URL suite covers safe and suspicious examples, malformed values, URL components, Unicode, length limits, authority syntax, keyword locations, suspicious TLDs, shorteners, ports, encoding, punctuation, path depth, punycode, conservative brand-like structure, deterministic output, and the no-network boundary.
 
@@ -14,26 +14,37 @@ The Phase 5 risk-engine suite covers empty input, indicator dictionaries, weight
 
 ## Phase 6 workflow tests
 
-The Phase 6 workflow suite verifies URL and email submissions create the correct `Scan` and type-specific detail records, call the existing analyzers and RiskEngine, persist scores and risk fields, persist `risk-v1`, store SHA-256 input hashes, capture non-negative local duration, persist explainable indicators, and preserve nested URL evidence.
+The Phase 6 workflow suite verifies URL and email submissions create the correct `Scan` and type-specific detail records, call the existing analyzers and RiskEngine, persist scores and risk fields, persist `risk-v1`, store SHA-256 input hashes, capture non-negative local duration, persist explainable indicators, and preserve nested URL evidence. Failure tests cover analyzer failures, unexpected exceptions, database write failures, safe error messages, transaction rollback, and the absence of orphaned detail records. View tests cover valid POST redirects, invalid input, CSRF enforcement, stable result routes, nonexistent-result handling, and GET result pages that do not rerun analysis.
 
-The failure tests cover analyzer failures, unexpected exceptions, database write failures, safe error messages, transaction rollback, failed-scan state, and the absence of orphaned URL/email detail records after rollback. View tests cover GET forms, valid POST redirects, invalid input, empty email input, CSRF enforcement, stable result routes, nonexistent-result 404 handling, and the guarantee that result-page GET does not rerun analysis.
+## Phase 7 history tests
 
-## Security regression tests
+The history suite covers an honest empty state, persisted rows, newest-first ordering, URL filtering, email filtering, every risk-level filter, completed and failed status filters, scan ID search, hostname search, sender search, subject search, 15-item pagination, preservation of filters in pagination links, existing result-route links, failed-scan visibility, safe failure messaging, read-only GET behavior, and a bounded history query count.
 
-The project retains tests confirming that user-provided content is escaped, POST requests require CSRF protection, input sizes are bounded, no submitted URL is contacted, no binary attachment is executed, and errors do not expose tracebacks in production mode. The URL, email, and end-to-end workflow tests block DNS, sockets, `urllib.request`, and HTTP-style calls while analysis runs. Production analysis modules contain no network-client imports.
+History deliberately searches bounded fields only: scan ID, URL hostname/original URL, sender, sender domain, Reply-To, and subject. It does not search unlimited raw email bodies. The history query uses `select_related` for the useful one-to-one URL/email detail rows and `Paginator` for bounded page loading.
+
+## Phase 7 dashboard tests
+
+The dashboard suite covers zero scans, one or more URL scans, one or more email scans, total/type/completed/failed counts, safe-low/high/critical counts, average/highest/lowest completed scores, five-level risk distribution, recent activity limited to eight rows, filtered metric links, dashboard read-only behavior, and equality between displayed context values and database-derived expected values.
+
+A query-count regression test confirms the dashboard uses a bounded number of ORM queries rather than querying once per scan. The implementation uses aggregate `Count`, `Avg`, `Max`, and `Min` queries, one grouped risk-distribution query, and one bounded recent-activity query. Statistics are computed server-side and are not produced in JavaScript.
+
+## Security and privacy regression tests
+
+The project retains tests confirming that user-provided content is escaped, POST requests require CSRF protection, input sizes are bounded, no submitted URL is contacted, no binary attachment is executed, and errors do not expose tracebacks or internal exception text. History and dashboard GET requests cannot create scans, invoke analyzers, or invoke the RiskEngine. Production workflow modules contain no network-client imports or command execution.
+
+History and dashboard explicitly represent all scans stored in the local application database. They do not claim user isolation, do not use “my scans” wording, and do not display full email bodies or raw email content.
 
 ## Manual acceptance path
 
 1. Open Home and confirm the established cybersecurity visual identity remains intact.
-2. Open the URL analyzer and submit a safe fictional test value such as `http://192.0.2.10:1234/login/verify`.
-3. Confirm the browser redirects to an ID-based result page containing the persisted score, risk level, verdict, indicators, technical URL details, duration, and limitation notice.
-4. Refresh the result page and confirm that it loads saved data without creating a second scan or rerunning analysis.
-5. Open the email analyzer and submit structured sender, Reply-To, subject, body, and attachment-name values.
-6. Confirm the email result displays persisted indicators and sender/URL/attachment counts without rendering trusted HTML or file contents.
-7. Submit an obviously invalid URL and confirm validation remains on the form without creating a scan.
-8. Open a nonexistent result identifier and confirm a safe styled 404 response does not expose Django debug information.
-9. Check the primary layouts at desktop and narrow viewport sizes. The result template includes responsive media-query behavior and does not depend on JavaScript for core content.
-
-## Deferred coverage
-
-History, dashboard statistics, authentication, external APIs, live URL checks, binary attachment scanning, background workers, and future multi-user workflow features remain outside Phase 6.
+2. With an empty test database, open Dashboard and History and verify polished zero states with no fabricated statistics or records.
+3. Submit a safe fictional URL such as `http://192.0.2.10:1234/login/verify`.
+4. Refresh Dashboard and verify total, URL, completed, score, and risk-distribution values update from the persisted scan.
+5. Submit a safe fictional structured email and verify the dashboard updates again.
+6. Open History and confirm both scans appear newest first with type, risk, score, timestamp, duration, status, and result links.
+7. Use URL, Email, risk, status, and search filters; verify query-string state remains visible and no scan is triggered.
+8. Create enough safe local test records to verify pagination and filter preservation.
+9. Follow View Result from History and confirm it uses the existing result route.
+10. Refresh History and Dashboard and verify no duplicate records are created.
+11. Check desktop and narrow viewport layouts. On small screens, history remains usable through bounded horizontal table scrolling and dashboard cards stack without losing labels or values.
+12. Confirm the all-database privacy limitation is visible and no user-specific history is implied.
