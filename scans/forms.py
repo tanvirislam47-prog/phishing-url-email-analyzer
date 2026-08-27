@@ -1,3 +1,5 @@
+from urllib.parse import urlsplit
+
 from django import forms
 
 
@@ -18,13 +20,23 @@ class URLScanForm(forms.Form):
         help_text="Submit the address as text. It will not be opened or connected to.",
     )
 
+    def clean_url(self):
+        value = self.cleaned_data["url"]
+        try:
+            parsed = urlsplit(value)
+        except ValueError as exc:
+            raise forms.ValidationError("Enter a parseable URL.") from exc
+        if not parsed.scheme or not parsed.netloc:
+            raise forms.ValidationError("Include a scheme and hostname, such as https://example.com.")
+        return value
+
 
 class EmailScanForm(forms.Form):
-    sender = forms.EmailField(
+    sender = forms.CharField(
         label="Sender",
         max_length=320,
         required=False,
-        widget=forms.EmailInput(
+        widget=forms.TextInput(
             attrs={
                 "class": "form-control",
                 "placeholder": "sender@example.com",
@@ -32,11 +44,11 @@ class EmailScanForm(forms.Form):
             }
         ),
     )
-    reply_to = forms.EmailField(
+    reply_to = forms.CharField(
         label="Reply-To",
         max_length=320,
         required=False,
-        widget=forms.EmailInput(
+        widget=forms.TextInput(
             attrs={
                 "class": "form-control",
                 "placeholder": "reply@example.com",
@@ -81,3 +93,9 @@ class EmailScanForm(forms.Form):
         ),
         help_text="Optional. Enter names only, separated by commas. Do not upload or open files.",
     )
+
+    def clean(self):
+        cleaned_data = super().clean()
+        if not any(value.strip() for value in cleaned_data.values() if isinstance(value, str)):
+            raise forms.ValidationError("Enter at least one email field before starting a scan.")
+        return cleaned_data

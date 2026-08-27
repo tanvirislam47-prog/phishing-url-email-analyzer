@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}Result Not Found | Phishing Analyzer{% endblock %}
+
+{% block content %}
+<section class="page-hero page-hero--compact">
+    <div class="container narrow-container">
+        <p class="eyebrow"><span class="eyebrow-line"></span> Result lookup / 404</p>
+        <h1>That scan could not<br><em>be located.</em></h1>
+        <p class="page-lede">The requested result does not exist or is no longer available. No database details were exposed.</p>
+    </div>
+</section>
+<section class="section-pad">
+    <div class="container result-placeholder">
+        <div class="placeholder-banner"><span class="status-dot status-dot--warning"></span><div><strong>No matching scan</strong><p>Start a new local analysis to create a fresh result.</p></div></div>
+        <div class="result-actions"><a class="button button--primary" href="{% url 'scans:url' %}">Analyze a URL <span aria-hidden="true">&rarr;</span></a><a class="button button--secondary" href="{% url 'scans:email' %}">Analyze an email <span aria-hidden="true">&rarr;</span></a></div>
+    </div>
+</section>
+{% endblock %}

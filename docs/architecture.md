@@ -87,10 +87,36 @@ URL Analyzer + Email Analyzer
 
 The engine accepts `IndicatorResult` objects or compatible dictionaries, deduplicates by rule code, applies centralized weights, handles nested email URL context, clamps the score to 0–100, maps the score to the existing `Scan.RiskLevel` choices, and returns a transparent breakdown, summary, recommendations, and `risk-v1` metadata. It remains independent of Django and does not write database records.
 
+## Phase 6 end-to-end workflow
+
+Phase 6 connects the existing forms through a thin Django view and service boundary:
+
+```text
+Form
+  ↓
+View
+  ↓
+Service
+  ↓
+Analyzer
+  ↓
+RiskEngine
+  ↓
+Persistence
+  ↓
+Result Page
+```
+
+For URL submissions, the service creates a pending `Scan` and `URLScan`, runs the local URL analyzer, sends its indicators to the RiskEngine, persists the score and explainable indicators, and marks the scan completed. Email submissions follow the same sequence with `EmailScan`; nested URL indicators from the Phase 4 email result are passed to the same RiskEngine without duplicating URL logic.
+
+The service layer measures local duration with a monotonic timer and computes a SHA-256 input hash. Successful results persist the RiskEngine score, risk level, verdict, rule version, duration, and applied indicator points. An unexpected exception rolls back type-specific detail and indicator records, then leaves only a safe `FAILED` scan record. Analyzer failures are also represented as failed scans without exposing internal exception details.
+
+The stable result route is `/scans/result/<scan_id>/`. A GET retrieves persisted records and renders them without rerunning any analyzer or the RiskEngine. The result page displays bounded evidence, explanations, recommendations, URL technical details or email context, and a clear local-analysis limitation.
+
 ## Planned architecture
 
-Later phases will add scan orchestration, result persistence calls, real history, and dashboard statistics. The current URL analyzer, email analyzer, and risk engine are ready to be called by that workflow but remain separate from Django views and database writes.
+Later phases will add real history, dashboard statistics, authentication, and any additional product capabilities. The current URL analyzer, email analyzer, risk engine, and Phase 6 workflow remain local and separate from external reputation services.
 
 ## Phase boundary
 
-Phase 5 implements centralized risk scoring in addition to the Phase 3 URL analyzer and Phase 4 email analyzer. It does not implement complete scan orchestration, database persistence integration, real history results, real dashboard statistics, external APIs, DNS, HTTP requests, machine learning, binary attachment uploads, or authentication.
+Phase 6 implements local end-to-end scan orchestration and persisted result rendering in addition to the Phase 3 URL analyzer, Phase 4 email analyzer, and Phase 5 risk engine. It does not implement real history functionality, dashboard statistics, external APIs, DNS, live HTTP requests, machine learning, binary attachment uploads, authentication, or background workers.

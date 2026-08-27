@@ -132,6 +132,8 @@ class EmailScan(models.Model):
     body = models.TextField(max_length=30000, blank=True, default="")
     attachment_names = models.TextField(max_length=2000, blank=True, default="")
     raw_email = models.TextField(max_length=50000, blank=True, default="")
+    extracted_url_count = models.PositiveIntegerField(default=0)
+    attachment_count = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return f"Email details for {self.scan}"
