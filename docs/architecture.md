@@ -55,10 +55,24 @@ The analyzer returns a `URLAnalysisResult` containing the original and normalize
 
 The model layer remains intentionally independent from the analyzer. A later scan workflow can persist the returned fields and indicators, while future rule changes can be versioned through the stored `rule_version` without requiring historical results to be recomputed.
 
+## Email analysis pipeline
+
+Phase 4 adds a framework-independent email analyzer in `analysis/email_analyzer.py`. The data flow is:
+
+```text
+raw email or structured fields → bounded input checks → stdlib email parser → header/body/MIME extraction → social-engineering rules → URL extraction → Phase 3 URL analyzer → structured indicators
+```
+
+The analyzer treats email content as untrusted text. Plain-text and HTML MIME parts are inspected locally; HTML is parsed as inert text and is never rendered or executed. Attachment filenames and declared content types are retained as metadata only. Binary attachment content is never opened, downloaded, unpacked, or executed.
+
+HTTP(S) URLs found in the body or HTML href attributes are passed to the existing Phase 3 URL analyzer. URL detection logic is not duplicated inside the email analyzer, and extracted URLs are never opened or expanded. Nested URL features and indicators remain available in the email result contract.
+
+The email analyzer returns `EmailAnalysisResult` with email features, indicators, extracted URL analysis, attachment metadata, bounded errors, and metadata confirming no network access. It does not write to Django models and does not calculate a final score, risk level, or verdict.
+
 ## Planned architecture
 
-Later phases will add email analysis, a deterministic centralized risk engine, scan orchestration, result persistence calls, real history, and dashboard statistics. The current URL analyzer is ready to be called by that workflow but remains separate from Django views and database writes.
+Later phases will add a deterministic centralized risk engine, scan orchestration, result persistence calls, real history, and dashboard statistics. The current URL and email analyzers are ready to be called by that workflow but remain separate from Django views and database writes.
 
 ## Phase boundary
 
-Phase 3 implements only the URL analyzer. It does not implement email detection rules, centralized score calculation, final risk levels or verdicts, real scan workflow, real history results, real dashboard statistics, external APIs, DNS, HTTP requests, machine learning, uploaded attachments, or authentication.
+Phase 4 implements the email analyzer in addition to the Phase 3 URL analyzer. It does not implement centralized score calculation, final risk levels or verdicts, real scan workflow, real history results, real dashboard statistics, external APIs, DNS, HTTP requests, machine learning, binary attachment uploads, or authentication.

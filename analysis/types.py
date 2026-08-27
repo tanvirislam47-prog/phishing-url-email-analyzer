@@ -70,6 +70,68 @@ class URLFeatures:
 
 
 @dataclass(frozen=True)
+class AttachmentInfo:
+    """Text-only metadata about an email attachment."""
+
+    filename: str
+    extension: str
+    content_type: str = ""
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+@dataclass(frozen=True)
+class EmailFeatures:
+    """Deterministic metadata extracted from an email without storing payloads."""
+
+    sender: str
+    sender_domain: str
+    sender_display_name: str
+    recipient: str
+    reply_to: str
+    subject: str
+    date: str
+    body_length: int
+    has_plain_text: bool
+    has_html: bool
+    is_multipart: bool
+    attachment_count: int
+    extracted_url_count: int
+    header_count: int
+    malformed_parts: tuple[str, ...] = field(default_factory=tuple)
+
+    def to_dict(self) -> dict[str, Any]:
+        data = asdict(self)
+        data["malformed_parts"] = list(self.malformed_parts)
+        return data
+
+
+@dataclass(frozen=True)
+class EmailAnalysisResult:
+    """The email analyzer contract; it intentionally has no final score/verdict."""
+
+    success: bool
+    features: EmailFeatures | None
+    indicators: tuple[IndicatorResult, ...] = field(default_factory=tuple)
+    extracted_urls: tuple[dict[str, Any], ...] = field(default_factory=tuple)
+    attachments: tuple[AttachmentInfo, ...] = field(default_factory=tuple)
+    error: str = ""
+    metadata: dict[str, Any] = field(default_factory=dict)
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "success": self.success,
+            "features": self.features.to_dict() if self.features else {},
+            "indicators": [indicator.to_dict() for indicator in self.indicators],
+            "extracted_urls": [dict(item) for item in self.extracted_urls],
+            "attachments": [attachment.to_dict() for attachment in self.attachments],
+            "error": self.error,
+            "metadata": dict(self.metadata),
+        }
+
+
+@dataclass(frozen=True)
 class URLAnalysisResult:
     """The analyzer contract. It deliberately contains no score or verdict."""
 
