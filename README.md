@@ -4,9 +4,9 @@
 >
 > [![Python](https://img.shields.io/badge/Python-3.x-3776AB?logo=python&logoColor=white)](https://www.python.org/) [![Django](https://img.shields.io/badge/Django-5.2-0C4B33?logo=django&logoColor=white)](https://www.djangoproject.com/) [![Security](https://img.shields.io/badge/Focus-Cybersecurity-1f6feb)](docs/security.md) [![Tests](https://img.shields.io/badge/Tests-187%20passing-2ea44f)](docs/testing.md)
 
-Phishing URL & Email Analyzer is a university and portfolio-ready Django application for reviewing suspicious links and message context without opening submitted URLs. It uses deterministic local heuristics to surface evidence, explain why each signal matters, and produce a bounded risk score that a person can review rather than blindly trust.
+Phishing URL & Email Analyzer is a Django-based cybersecurity analysis tool for reviewing suspicious links and email content without opening submitted URLs. It uses deterministic local heuristics to surface evidence, explain why each signal matters, and produce a bounded risk score that a person can review rather than blindly trust.
 
-> **Current status — Phase 9:** The application includes the complete local scan workflow, persisted results, real history and dashboard views, security hardening, adversarial regression coverage, responsive product UI, local branding, screenshot documentation, and portfolio-ready architecture notes. Authentication and user-specific isolation are intentionally not enabled.
+> **Project status — Complete:** The application includes the complete local scan workflow, persisted results, real history and dashboard views, security hardening, adversarial regression coverage, responsive product UI, local branding, screenshot documentation, and portfolio-ready architecture notes. Authentication and user-specific isolation are intentionally not enabled.
 
 ## Overview
 
