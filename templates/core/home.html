@@ -43,8 +43,8 @@
         <div class="feature-grid">
             <article class="feature-card"><div class="feature-number">01</div><div class="feature-icon">↗</div><h3>URL analysis</h3><p>Review structural characteristics such as hostname shape, encoding, ports, depth, and suspicious notation.</p><a href="{% url 'scans:url' %}">Inspect a URL <span aria-hidden="true">&rarr;</span></a></article>
             <article class="feature-card"><div class="feature-number">02</div><div class="feature-icon">✉</div><h3>Email analysis</h3><p>Examine sender context, social-engineering language, links, Reply-To details, and attachment names.</p><a href="{% url 'scans:email' %}">Inspect an email <span aria-hidden="true">&rarr;</span></a></article>
-            <article class="feature-card"><div class="feature-number">03</div><div class="feature-icon">⌁</div><h3>Explainable risk score</h3><p>Future results will show the signals behind a score rather than hiding the reasoning behind a black box.</p><a href="{% url 'core:about' %}">See the approach <span aria-hidden="true">&rarr;</span></a></article>
-            <article class="feature-card"><div class="feature-number">04</div><div class="feature-icon">▤</div><h3>Scan history</h3><p>A dedicated history and dashboard foundation is ready for saved analyses in a later project phase.</p><a href="{% url 'scans:history' %}">View history <span aria-hidden="true">&rarr;</span></a></article>
+            <article class="feature-card"><div class="feature-number">03</div><div class="feature-icon">⌁</div><h3>Explainable risk score</h3><p>Results show the signals behind a score rather than hiding the reasoning behind a black box.</p><a href="{% url 'core:about' %}">See the approach <span aria-hidden="true">&rarr;</span></a></article>
+            <article class="feature-card"><div class="feature-number">04</div><div class="feature-icon">▤</div><h3>Scan history</h3><p>Review saved analyses in the local history and dashboard views, with no fabricated statistics when the database is empty.</p><a href="{% url 'scans:history' %}">View history <span aria-hidden="true">&rarr;</span></a></article>
         </div>
     </div>
 </section>
@@ -52,7 +52,7 @@
 <section class="method-section section-pad">
     <div class="container method-grid">
         <div><p class="eyebrow"><span class="eyebrow-line"></span> Methodology preview</p><h2>Evidence you can<br><em>understand.</em></h2></div>
-        <div class="method-copy"><p>The analyzer is designed around local, deterministic rules. Each future indicator will show what was detected, why it matters, and what action is sensible next.</p><div class="method-points"><div><span>01</span><strong>Parse locally</strong><small>No network lookups</small></div><div><span>02</span><strong>Explain signals</strong><small>Evidence with context</small></div><div><span>03</span><strong>Guide action</strong><small>Recommendations, not guarantees</small></div></div></div>
+        <div class="method-copy"><p>The analyzer uses local, deterministic rules. Each indicator shows what was detected, why it matters, and what action is sensible next.</p><div class="method-points"><div><span>01</span><strong>Parse locally</strong><small>No network lookups</small></div><div><span>02</span><strong>Explain signals</strong><small>Evidence with context</small></div><div><span>03</span><strong>Guide action</strong><small>Recommendations, not guarantees</small></div></div></div>
     </div>
 </section>
 {% endblock %}

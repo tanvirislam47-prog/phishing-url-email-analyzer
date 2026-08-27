@@ -48,3 +48,13 @@ History and dashboard explicitly represent all scans stored in the local applica
 10. Refresh History and Dashboard and verify no duplicate records are created.
 11. Check desktop and narrow viewport layouts. On small screens, history remains usable through bounded horizontal table scrolling and dashboard cards stack without losing labels or values.
 12. Confirm the all-database privacy limitation is visible and no user-specific history is implied.
+
+## Phase 8 security hardening and adversarial QA
+
+Phase 8 adds focused adversarial coverage for hostile URL values, unsupported schemes, loopback and IPv6 text, Unicode/IDN and encoded values, oversized URL and email inputs, malformed MIME, HTML script/style exclusion, bounded nested URLs and attachment names, duplicate nested URL handling, indicator deduplication, score boundaries, filesystem/process safety, and runtime network blocking across normal and suspicious URL/email workflows.
+
+The Phase 8 Django security suite covers escaped URL/email/indicator content, safe failed-result rendering, SQL-injection-shaped search values, invalid history filters, safe result-ID and route-level 404 behavior, GET-only read paths, CSRF rejection, security headers, invalid and beyond-last pagination, analyzer and risk-engine failure states, transaction rollback/no-orphan behavior, score database constraints, persisted score bounds, runtime network blocking, and bounded result reads.
+
+Source inspection confirms there are no unsafe `|safe` template filters, dynamic DOM injection APIs, process execution calls, or production network clients. The dependency surface remains Django only. The external Google Fonts request was removed so the browser UI remains local/offline; system font fallbacks preserve the established design.
+
+Manual Phase 8 browser QA covered Home, URL form and validation, normal URL submission, email form and sample fill, suspicious email submission, persisted result refresh, History, Dashboard, About, filters, safe 404 handling, and form recovery. Pagination edge behavior is covered by the focused automated tests without seeding artificial persistent records into the deliverable database. Browser notes are recorded in `docs/phase8-browser-verification.md`.

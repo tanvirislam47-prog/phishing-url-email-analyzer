@@ -1,8 +1,4 @@
-"""Django settings for the Phishing URL & Email Analyzer.
-
-Phase 1 intentionally contains presentation scaffolding only. Analysis,
-scan persistence, and dashboard statistics are reserved for later phases.
-"""
+"""Django settings for the local Phishing URL & Email Analyzer."""
 
 import os
 from pathlib import Path
@@ -90,3 +86,4 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # HTTPS settings should be enabled only when the deployment is actually HTTPS.
 SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = "DENY"
+SECURE_REFERRER_POLICY = "same-origin"
