@@ -1,16 +1,20 @@
 # Testing
 
-## Current Phase 1 checks
+## Current Phase 1 and Phase 2 checks
 
-Phase 1 focuses on foundation verification: Django system checks, template rendering, route resolution, static-file references, form rendering, CSRF tokens, and honest empty or planned states.
+The foundation checks cover Django system checks, migration cleanliness, template rendering, route resolution, static-file references, form rendering, CSRF tokens, ORM relationships, constraints, admin registration, and honest empty or planned states.
+
+## Phase 3 URL analyzer tests
+
+Phase 3 adds pure-Python tests for safe and suspicious examples, empty and whitespace input, missing schemes, malformed URLs, invalid ports, IPv4 and IPv6, URL components, Unicode, length limits, authority syntax, keyword locations, suspicious TLDs, shorteners, ports, encoding, punctuation, path depth, punycode, conservative brand-like structure, deterministic output, and the structured result contract.
 
 ## Planned future tests
 
-Later analysis phases should add unit tests for URL feature extraction, email language and header checks, nested URL extraction, attachment-extension checks, risk thresholds, duplicate suppression, and score bounds.
+Later analysis phases should add email language and header checks, nested URL extraction, attachment-extension checks, risk thresholds, duplicate suppression, and score bounds.
 
 ## Security regression tests
 
-The project should retain tests confirming that user-provided content is escaped, POST requests require CSRF protection, input sizes are bounded, no submitted URL is contacted, no binary attachment is executed, and errors do not expose tracebacks in production mode.
+The project should retain tests confirming that user-provided content is escaped, POST requests require CSRF protection, input sizes are bounded, no submitted URL is contacted, no binary attachment is executed, and errors do not expose tracebacks in production mode. The Phase 3 analyzer test suite blocks DNS, sockets, `urllib.request`, and HTTP-style calls while analysis runs, proving that feature extraction remains local.
 
 ## Manual acceptance path
 

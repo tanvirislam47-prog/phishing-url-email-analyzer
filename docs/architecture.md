@@ -43,10 +43,22 @@ Submitted URLs are stored as data only. No model save hook, signal, admin action
 
 Django autoescaping and CSRF protection remain enabled. Raw content is bounded at the model layer and is not exposed in admin list views. Future analysis code must continue to truncate evidence before persistence and render all user content safely.
 
+## URL analysis pipeline
+
+Phase 3 adds a framework-independent URL analyzer in `analysis/url_analyzer.py`. The data flow is:
+
+```text
+URL input string → safe input checks → standard-library parser → feature extraction → rule evaluation → structured indicators
+```
+
+The analyzer returns a `URLAnalysisResult` containing the original and normalized URL, deterministic technical features, explainable indicators, and metadata confirming that network access was not used. It does not write to Django models and it does not calculate a final score, risk level, or verdict.
+
+The model layer remains intentionally independent from the analyzer. A later scan workflow can persist the returned fields and indicators, while future rule changes can be versioned through the stored `rule_version` without requiring historical results to be recomputed.
+
 ## Planned architecture
 
-Later phases will add pure Python URL and email analyzers, a deterministic risk engine, scan orchestration, result persistence calls, real history, and dashboard statistics. The model layer is intentionally independent from those analyzers so rule changes can be versioned through `rule_version` while historical output remains renderable.
+Later phases will add email analysis, a deterministic centralized risk engine, scan orchestration, result persistence calls, real history, and dashboard statistics. The current URL analyzer is ready to be called by that workflow but remains separate from Django views and database writes.
 
 ## Phase boundary
 
-Phase 2 does not implement URL detection rules, email detection rules, score calculation, real scan workflow, real history results, real dashboard statistics, external APIs, DNS, HTTP requests, machine learning, uploaded attachments, or authentication.
+Phase 3 implements only the URL analyzer. It does not implement email detection rules, centralized score calculation, final risk levels or verdicts, real scan workflow, real history results, real dashboard statistics, external APIs, DNS, HTTP requests, machine learning, uploaded attachments, or authentication.
